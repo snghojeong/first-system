@@ -3,6 +3,8 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+import psycopg2
+from sqlalchemy import create_engine, text
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
@@ -23,6 +25,68 @@ class User(UserMixin, db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# Supabase 연결 설정
+SUPABASE_URL = 'postgresql://postgres.ejhasfwebwaexlprpssc:vjtmxmqnehdtks@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
+
+def get_supabase_data():
+    """Supabase에서 데이터를 가져오는 함수"""
+    try:
+        # psycopg2로 직접 연결
+        conn = psycopg2.connect(SUPABASE_URL)
+        
+        cur = conn.cursor()
+        tables_data = {}
+        
+        # 모든 테이블 이름 조회
+        cur.execute("""
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND table_type = 'BASE TABLE'
+            ORDER BY table_name
+        """)
+        
+        table_names = [row[0] for row in cur.fetchall()]
+        
+        # 각 테이블의 데이터 조회
+        for table_name in table_names:
+            try:
+                # 테이블 컬럼 정보 조회
+                cur.execute(f"""
+                    SELECT column_name, data_type 
+                    FROM information_schema.columns 
+                    WHERE table_name = '{table_name}' 
+                    AND table_schema = 'public'
+                    ORDER BY ordinal_position
+                """)
+                
+                columns = cur.fetchall()
+                
+                # 테이블 데이터 조회 (대소문자 구분을 위해 쌍따옴표 사용)
+                cur.execute(f'SELECT * FROM "{table_name}" LIMIT 100')
+                rows = cur.fetchall()
+                
+                tables_data[table_name] = {
+                    'columns': columns,
+                    'rows': [list(row) for row in rows],
+                    'count': len(rows)
+                }
+                
+            except Exception as e:
+                tables_data[table_name] = {
+                    'error': str(e),
+                    'columns': [],
+                    'rows': [],
+                    'count': 0
+                }
+        
+        cur.close()
+        conn.close()
+        return tables_data
+            
+    except Exception as e:
+        return {'error': f'Supabase 연결 오류: {str(e)}'}
+
 def create_tables():
     with app.app_context():
         db.create_all()
@@ -34,7 +98,9 @@ def create_tables():
 @app.route('/')
 @login_required
 def index():
-    return render_template('index.html', username=current_user.username)
+    # Supabase에서 데이터 가져오기
+    tables_data = get_supabase_data()
+    return render_template('index.html', username=current_user.username, tables_data=tables_data)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

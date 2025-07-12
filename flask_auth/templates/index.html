@@ -79,6 +79,63 @@
             border-radius: 4px;
             margin-top: 20px;
         }
+        .data-section {
+            margin-top: 30px;
+        }
+        .table-container {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .table-header {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+            color: #333;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .data-table th {
+            background-color: #e9ecef;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid #ddd;
+            font-weight: bold;
+        }
+        .data-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #eee;
+            word-wrap: break-word;
+            max-width: 200px;
+        }
+        .data-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .no-data {
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .table-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            padding: 8px 15px;
+            font-size: 12px;
+            border-top: 1px solid #bee5eb;
+        }
     </style>
 </head>
 <body>
@@ -111,6 +168,72 @@
                 <strong>✅ 시스템 상태:</strong> 정상 운영 중<br>
                 <strong>📅 접속 시간:</strong> <span id="current-time"></span><br>
                 <strong>🏢 지점:</strong> 퍼스트부동산 본점
+            </div>
+
+            <!-- 데이터베이스 테이블 데이터 표시 섹션 -->
+            <div class="data-section">
+                <h2>📊 데이터베이스 정보</h2>
+                
+                {% if tables_data %}
+                    {% if tables_data.error %}
+                        <div class="error-message">
+                            {{ tables_data.error }}
+                        </div>
+                    {% else %}
+                        {% for table_name, table_data in tables_data.items() %}
+                            <div class="table-container">
+                                <div class="table-header">
+                                    📋 테이블: {{ table_name }}
+                                </div>
+                                
+                                {% if table_data.error %}
+                                    <div class="error-message">
+                                        오류: {{ table_data.error }}
+                                    </div>
+                                {% elif table_data.count == 0 %}
+                                    <div class="no-data">
+                                        데이터가 없습니다.
+                                    </div>
+                                {% else %}
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                {% for column_name, column_type in table_data.columns %}
+                                                    <th>{{ column_name }} <small>({{ column_type }})</small></th>
+                                                {% endfor %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in table_data.rows %}
+                                                <tr>
+                                                    {% for value in row %}
+                                                        <td>
+                                                            {% if value is none %}
+                                                                <em>NULL</em>
+                                                            {% elif value|string|length > 50 %}
+                                                                {{ value|string|truncate(50) }}
+                                                            {% else %}
+                                                                {{ value }}
+                                                            {% endif %}
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div class="table-info">
+                                        💾 총 {{ table_data.count }}개의 레코드 (최대 100개 표시)
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <div class="no-data">
+                        데이터베이스 연결 정보가 없습니다.
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

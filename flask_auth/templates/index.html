@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지 - Flask Auth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .main-container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            color: #333;
+            margin: 0;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .welcome-text {
+            color: #666;
+            font-size: 16px;
+        }
+        .logout-btn {
+            padding: 8px 16px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
+        .content {
+            line-height: 1.6;
+            color: #555;
+        }
+        .feature-list {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .feature-list h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .feature-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .feature-list li {
+            margin-bottom: 8px;
+        }
+        .status-info {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>Flask 로그인 시스템</h1>
+            <div class="user-info">
+                <span class="welcome-text">환영합니다, <strong>{{ username }}</strong>님!</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">로그아웃</a>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2>메인 페이지</h2>
+            <p>성공적으로 로그인하셨습니다! 이 페이지는 인증된 사용자만 접근할 수 있습니다.</p>
+            
+            <div class="feature-list">
+                <h3>🔐 구현된 기능들</h3>
+                <ul>
+                    <li>Flask-Login 기반 사용자 인증</li>
+                    <li>SQLite 데이터베이스를 통한 사용자 정보 저장</li>
+                    <li>Werkzeug을 이용한 비밀번호 해시화</li>
+                    <li>로그인 상태 유지 및 세션 관리</li>
+                    <li>미인증 사용자 자동 리디렉션</li>
+                    <li>반응형 웹 디자인</li>
+                </ul>
+            </div>
+            
+            <div class="status-info">
+                <strong>✅ 로그인 상태:</strong> 활성화됨<br>
+                <strong>📅 접속 시간:</strong> <span id="current-time"></span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('current-time').textContent = new Date().toLocaleString('ko-KR');
+    </script>
+</body>
+</html>

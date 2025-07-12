@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>메인 페이지 - Flask Auth</title>
+    <title>퍼스트부동산 고객 및 매물 관리 시스템</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -84,7 +84,7 @@
 <body>
     <div class="main-container">
         <div class="header">
-            <h1>Flask 로그인 시스템</h1>
+            <h1>퍼스트부동산 고객 및 매물 관리 시스템</h1>
             <div class="user-info">
                 <span class="welcome-text">환영합니다, <strong>{{ username }}</strong>님!</span>
                 <a href="{{ url_for('logout') }}" class="logout-btn">로그아웃</a>
@@ -92,24 +92,25 @@
         </div>
         
         <div class="content">
-            <h2>메인 페이지</h2>
-            <p>성공적으로 로그인하셨습니다! 이 페이지는 인증된 사용자만 접근할 수 있습니다.</p>
+            <h2>부동산 관리 대시보드</h2>
+            <p>퍼스트부동산 고객 및 매물 관리 시스템에 오신 것을 환영합니다!</p>
             
             <div class="feature-list">
-                <h3>🔐 구현된 기능들</h3>
+                <h3>🏠 주요 기능</h3>
                 <ul>
-                    <li>Flask-Login 기반 사용자 인증</li>
-                    <li>SQLite 데이터베이스를 통한 사용자 정보 저장</li>
-                    <li>Werkzeug을 이용한 비밀번호 해시화</li>
-                    <li>로그인 상태 유지 및 세션 관리</li>
-                    <li>미인증 사용자 자동 리디렉션</li>
-                    <li>반응형 웹 디자인</li>
+                    <li>고객 정보 관리 및 상담 이력 추적</li>
+                    <li>매물 등록, 수정 및 상태 관리</li>
+                    <li>계약 진행 상황 모니터링</li>
+                    <li>매출 분석 및 실적 보고서</li>
+                    <li>일정 관리 및 알림 서비스</li>
+                    <li>시장 동향 및 가격 비교 분석</li>
                 </ul>
             </div>
             
             <div class="status-info">
-                <strong>✅ 로그인 상태:</strong> 활성화됨<br>
-                <strong>📅 접속 시간:</strong> <span id="current-time"></span>
+                <strong>✅ 시스템 상태:</strong> 정상 운영 중<br>
+                <strong>📅 접속 시간:</strong> <span id="current-time"></span><br>
+                <strong>🏢 지점:</strong> 퍼스트부동산 본점
             </div>
         </div>
     </div>

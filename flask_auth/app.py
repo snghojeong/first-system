@@ -143,7 +143,7 @@ def chat():
             'prompt': f"당신은 부동산 회사 퍼스트부동산의 부동산 전문 상담사입니다. 다음 질문에 친절하고 전문적으로 답변해주세요:\n\n{user_message}",
             'stream': False,
             'options': {
-                'num_predict': 200,  # 응답 길이 제한
+                'num_predict': 1000,  # 응답 길이 제한
                 'temperature': 0.7,
                 'top_p': 0.9
             }

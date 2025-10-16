@@ -31,7 +31,6 @@ def load_user(user_id):
 SUPABASE_URL = 'postgresql://postgres.ejhasfwebwaexlprpssc:vjtmxmqnehdtks@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres'
 
 def get_supabase_data():
-    """Supabase에서 데이터를 가져오는 함수"""
     try:
         # psycopg2로 직접 연결
         conn = psycopg2.connect(SUPABASE_URL)
